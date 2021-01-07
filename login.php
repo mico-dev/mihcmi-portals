@@ -1,5 +1,8 @@
 <?php
 session_start();
+date_default_timezone_set('Asia/Manila');
+$now = new DateTime();
+$year = $now->format('Y');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,10 +69,10 @@ include('config.php');
         $ccode = $_GET['code'];
         $sqlcodecheck = mysqli_query($con,"SELECT * FROM tb_rtpcr WHERE rt_ccode='$ccode' ") or die(mysqli_error($con));
             while($row = mysqli_fetch_array($sqlcodecheck)) {
-                 $fname = $row['rt_fname'];
-                 $lname = $row['rt_lname'];
-                 $mname = $row['rt_mname'];
-                 $sdate = $row['rt_datesched'];
+                $fname = $row['rt_fname'];
+                $lname = $row['rt_lname'];
+                $mname = $row['rt_mname'];
+                $sdate = $row['rt_datesched'];
             }
         $countsqlcodecheck = mysqli_num_rows($sqlcodecheck);
         $ndchange =  date('F d, Y', strtotime($sdate));  
@@ -91,7 +94,11 @@ include('config.php');
         $countcheck = mysqli_num_rows($check);
         $checkapp = mysqli_query($con,"SELECT * FROM tb_rtpcr WHERE rt_ccode='$pword' AND rt_lname='$uname'") or die(mysqli_error($con));
         $countcheckapp = mysqli_num_rows($checkapp);
-        $sql = mysqli_query($con, "SELECT * FROM `tb_rtpcrfull` WHERE BINARY rt_user='$uname' AND rt_pass='$pword'") or die(mysqli_error($con));
+        
+            //new
+            $sql = mysqli_query($con, "SELECT rt_id, rt_user, rt_pass FROM `tb_rtpcrfull` WHERE BINARY rt_user='$uname' AND rt_pass='$pword' UNION ALL SELECT rt_id, rt_user, rt_pass FROM `tb_rtpcrnew` WHERE BINARY rt_user='$uname' AND rt_pass='$pword'") or die(mysqli_error($con));
+        
+        
         $doc = mysqli_query($con, "SELECT * FROM `tb_meduser` WHERE m_pass='$pword' AND m_license='$uname' AND m_userid='6'") or die(mysqli_error($con));
         ###
         if($countcheck <> 0 ) {

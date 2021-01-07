@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 session_start();
 if(!isset($_SESSION['sessionid'])) {
 	echo "<script>window.location='index.php';</script>";	
@@ -7,12 +8,13 @@ if(!isset($_SESSION['sessionid'])) {
 <!DOCTYPE html>
 <html lang="en"> 
 <?php
+
 date_default_timezone_set('Asia/Manila');
 $rt_id = $_SESSION['sessionid'];
 include('config.php');
 $micro = round(microtime(true));
 $id = $_SESSION['sessionid'];  
-$sql = mysqli_query($con, "SELECT * FROM tb_rtpcrfull WHERE rt_id='$id'") or die(mysqli_error($con));
+$sql = mysqli_query($con, "SELECT rt_id, rt_timestamp, rt_linestatus, rt_validation, rt_dateofinterview, rt_validationts FROM tb_rtpcrfull WHERE rt_id='$id' UNION ALL SELECT rt_id, rt_timestamp, rt_linestatus, rt_validation, rt_dateofinterview, rt_validationts FROM tb_rtpcrnew WHERE rt_id='$id'") or die(mysqli_error($con));
   while($row=mysqli_fetch_assoc($sql)){
 
 $id=$row['rt_id'];
@@ -255,82 +257,6 @@ include('rtpcr.nav.php');
 								<form method="POST">
 								<div class="card-body">
  <?php
-if($si1type!=''){
-  $si1received =  date('F d, Y', strtotime($si1received)); 
-  } 
-  if($si2type!=''){
-  #2
-  $si2received =  date('F d, Y', strtotime($si2received)); 
-  }
-  if($si3type!=''){
-  #3
-  $si3received =  date('F d, Y', strtotime($si3received)); 
-  }
-  if($si4type!=''){
-  #4
-  $si4received =  date('F d, Y', strtotime($si4received)); 
-  }
-  if($si5type!=''){
-  #5
-  $si5received =  date('F d, Y', strtotime($si5received)); 
-  }
-
-#echo "<table class='table table-bordered'>
-#<thead>
-#  <tr>
-#   <th>Status</th>
-#    <th>Information</th>
-#  </tr>
-#  <tr>
-#    <th scope='col' width='50%'>Received</th>";
-#echo "<td class='table-light'>$si1received $si2received $si3received $si4received $si5received</td>";
-#echo "</tr>
-#  <tr>
-#    <th scope='col' width='50%'>Verification</th>";
-#if($linestatus!='YES'){
-  #$linestatus = 'For Verification';
-  #$linestatus = 'Pending';
-#}else{
- # $linestatus = 'Verified';
-#}
-#echo " <td class='table-light'>$linestatus</td>";
-
-#echo " </tr>
-#<tr>
-#<th scope='col' width='50%'>Validation</th> ";
-    #if($validation=='YES'){
-     # $validation = 'Validated : For Sending';
-    #}else{
-      #$validation = 'For Validation';
-   #   $validation = 'Pending';
-    #}
-#echo "<td class='table-light'>$validation</td>";
-#echo "</tr>
-#<tr>
-#<th scope='col' width='50%'>Released</th> ";
-#date('Y-m-d H:i:s', strtotime($stop_date . ' +1 day'));
-# | '.date('F d, Y', strtotime($si1received. ' +1 day')).' 8:00:00 AM
-#if(rt_timestamp<=12Noon same day) received is 12nn that day
-#else if 12NooN<=rt_timestamp received last timestamp of the day
-#receive =     
-   # if($id<='100339') {
-	#		$verified= 'Verified';
-#			$validation = 'Validated';
-#			$sendstatus = 'Sent <br>Please check you email or claim at Metro Iloilo Hospital & Medical Center, Inc.';
-	#}else {
-
-	#	$verified= 'Pending';
-   # 	$validation = 'Pending';
-    	#$sentdate = 'For Sending';
-    	#	if($sentdate!='') {
-    #			$verified= 'Verified';
-	#			$validation = 'Validated';
-    #			$sendstatus = 'Sent | '.date('F d, Y  H:i:s A', strtotime($sentdate)). '<br>Please check you email or claim at Metro Iloilo Hospital & Medical Center, Inc.';
-    	#	}else {
-    	#		$sendstatus = 'Pending';
-    #		}
-    	
-#	}
 $getNoon = date('F d, Y', strtotime($rt_timestamp));
 $getNoon .= ' 12:00:00 PM';
 $noon = $getNoon;
@@ -355,6 +281,7 @@ if($linestatus!='YES'){
 			$verified= 'Verified';
 			$validation = 'Validated <br> '. $vts;
 			$sendstatus = 'Sent <br>Please check you email or claim at Metro Iloilo Hospital & Medical Center, Inc.';
+			
 		}else {
 
 			$verified= 'Pending';
@@ -379,18 +306,13 @@ $b = date('m-d-y H:i:s A', strtotime($noon));
 if($a<=$b) {
 	$received = $noon;
 } else {
-	$receivedquery = mysqli_query($con, "SELECT rt_id, rt_dateofinterview, rt_timestamp FROM `tb_rtpcrfull` WHERE rt_dateofinterview='$dateofinterview' ORDER BY rt_id DESC LIMIT 1")or die(mysqli_error($con));
+	$receivedquery = mysqli_query($con, "SELECT rt_id, rt_dateofinterview, rt_timestamp FROM `tb_rtpcrfull` WHERE rt_dateofinterview='$dateofinterview' UNION ALL SELECT rt_id, rt_dateofinterview, rt_timestamp FROM `tb_rtpcrnew` WHERE rt_dateofinterview='$dateofinterview' ORDER BY rt_id DESC LIMIT 1")or die(mysqli_error($con));
 	while($row=mysqli_fetch_assoc($receivedquery)) {
 		$timestamp = $row['rt_timestamp'];
-		$received = date('F d, Y H:i:s A', strtotime($timestamp));
+		$received = date('F d, Y H:i:s A', strtotime($timestamp));//last entry
 	}
 	
-}  
-#echo " <td class='table-light'>$sentdate</td>";
-#echo " </tr>  
-#</thead>";
-#echo "</table>";
-#<h2>'.$si1received.''.$si2received.''.$si3received.''.$si4received.''.$si5received.'</h2>
+}
 echo '<div class="alert alert-primary">
 <div class="row">
 <div class="col-md-4">
@@ -426,22 +348,6 @@ echo '<div class="alert alert-primary">
 </div>
 </div>
 </div>';
-		#echo '<h2><u>Received: </u><b>';
-		#echo $si1received;
-		#echo $si2received;
-		#echo $si3received;
-		#echo $si4received;
-		#echo $si5received;
-		#echo'</b></h2>';
-		#echo '<h2><u>Verified: </u><b>';
-		#echo $linestatus;
-		#echo'</b></h2>';
-		#echo '<h2><u>Validation: </u><b>';
-		#echo $validation;
-		#echo'</b></h2>';
-		#echo '<h2><u>Released: </u><b>';
-		#echo $sendstatus;
-		#echo'</b></h2>';
 echo '</div>';
 ?>
 
