@@ -8,14 +8,13 @@ if(!isset($_SESSION['sessionid'])) {
 <!DOCTYPE html>
 <html lang="en"> 
 <?php
-
 date_default_timezone_set('Asia/Manila');
 $rt_id = $_SESSION['sessionid'];
 include('config.php');
 $micro = round(microtime(true));
 $id = $_SESSION['sessionid'];  
-$sql = mysqli_query($con, "SELECT rt_id, rt_timestamp, rt_linestatus, rt_validation, rt_dateofinterview, rt_validationts FROM tb_rtpcrfull WHERE rt_id='$id' UNION ALL SELECT rt_id, rt_timestamp, rt_linestatus, rt_validation, rt_dateofinterview, rt_validationts FROM tb_rtpcrnew WHERE rt_id='$id'") or die(mysqli_error($con));
-  while($row=mysqli_fetch_assoc($sql)){
+$sql = mysqli_query($con, "SELECT rt_id, rt_timestamp, rt_linestatus, rt_validation, rt_dateofinterview, rt_validationts, rt_sentdate FROM tb_rtpcrfull WHERE rt_id='$id' UNION ALL SELECT rt_id, rt_timestamp, rt_linestatus, rt_validation, rt_dateofinterview, rt_validationts, rt_sentdate FROM tb_rtpcrnew WHERE rt_id='$id'") or die(mysqli_error($con));
+  while($row=mysqli_fetch_assoc($sql)) {
 
 $id=$row['rt_id'];
 $sgstatus=$row['rt_sgstatus'];
@@ -147,11 +146,11 @@ $finalresult = $row['rt_finalresult'];
 $linestatus = $row['rt_linestatus'];
 $validation = $row['rt_validation'];
 $sentdate = $row['rt_sentdate'];
-$sentdate = $row['rt_sentdate'];
 $sendstatus = $row['rt_sendstatus'];
 $rt_timestamp = $row['rt_timestamp'];
 $rt_validationts = $row['rt_validationts'];
   }
+  
   $filename="CIF$fname$mname$lname$suffix$micro";
   $bday = new DateTime($bdate);  
 		$today = new Datetime(date('Y-m-d'));
@@ -256,10 +255,11 @@ include('rtpcr.nav.php');
 							<div class="card full-height">
 								<form method="POST">
 								<div class="card-body">
- <?php
+<?php
 $getNoon = date('F d, Y', strtotime($rt_timestamp));
 $getNoon .= ' 12:00:00 PM';
 $noon = $getNoon;
+
 #echo $noon .= '12:00:00'; 
 if($linestatus!='YES'){
   #$linestatus = 'For Verification';
@@ -285,7 +285,7 @@ if($linestatus!='YES'){
 		}else {
 
 			$verified= 'Pending';
-	    	$validation = 'Pending';
+			$validation = 'Pending';
 	    	#$sentdate = 'For Sending';
 	    		if($sentdate!='') {
 	    			$vts = (strlen($rt_validationts)<>0) ? date('F d, Y  H:i:s A', strtotime($rt_validationts)) : $rt_validationts;
@@ -310,6 +310,7 @@ if($a<=$b) {
 	while($row=mysqli_fetch_assoc($receivedquery)) {
 		$timestamp = $row['rt_timestamp'];
 		$received = date('F d, Y H:i:s A', strtotime($timestamp));//last entry
+		
 	}
 	
 }
