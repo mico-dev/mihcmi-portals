@@ -1,0 +1,21 @@
+/*Custom CSS for MIHMCI Portal*/
+body,
+html {
+  height: 100vh;
+}
+.container-fluid.portal-bg {
+  background: url(../image/Metrol-Iloilo-Hosptial-and-Medical-Center-Inc-Portal-Background.jpg);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 100vh;
+}
+.container-fluid.home.portal-bg {
+  background: url(../image/Metrol-Iloilo-Hosptial-and-Medical-Center-Inc-Portal-Background.jpg);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 100vh;
+}
