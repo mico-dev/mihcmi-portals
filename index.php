@@ -263,7 +263,7 @@ Timestamp: $ts
     $headers = "From: MIHMCI-RTPCR\nMIME-Version: 1.0\nContent-Type: text/html; charset=utf-8\n";  
          
     $to2      = "mihmci.his@gmail.com";
-    $to3      = "mihmci.covid19lab@gmail.com";
+    $to3      = "mihmci.covidarchive@gmail.com";
     $subject2 = "RT-PCR Online Registration";
     $message2 = $msg2;
 
