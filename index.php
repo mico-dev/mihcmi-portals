@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -213,8 +216,10 @@ $date =  $_POST['ayear'].'-'.$_POST['amonth'].'-'. $_POST['aday'];
     $xdate = strtotime($date);
     $now = strtotime(date('Y-m-d'));
     $sunday = date('l', $xdate);
-       
-      
+        ###
+        if($_POST['captcha'] == $_SESSION['digit']){
+           
+            ###
             $regrtpax = mysqli_query($con, "INSERT INTO `tb_rtpcrnewcifonline` (`rt_primaryai`, `rt_lname`, `rt_fname`, `rt_mname`, `rt_suffix`, `rt_bdate`, `rt_gender`, `rt_cstatus`, `rt_occupation`, `rt_nationality`, `rt_phicnumber`, `rt_curaddhousenum`, `rt_curstreet`, `rt_curbarangay`, `rt_curcity`, `rt_curprovince`, `rt_curhomephone`, `rt_curcontactnumber`, `rt_curemail`, `rt_peraddhousenum`, `rt_perstreet`, `rt_perbarangay`, `rt_percity`, `rt_perprovince`, `rt_perhomephone`, `rt_percontactnumber`, `rt_peremail`, `rt_wpaddhousenum`, `rt_wpstreet`, `rt_wpbarangay`, `rt_wpcity`, `rt_wpprovince`, `rt_wphomephone`, `rt_wpcontactnumber`, `rt_wpemail`, `rt_code`, `rt_datesched`) VALUES (NULL, '$lname', '$fname', '$mname', '$suffix', '$bdate', '$gender', '$cstatus', '$occupation', '$nationality', '$phicnumber', '$curaddhousenum', '$curstreet', '$curbarangay', '$curcity', '$curprovince', '$curhomephone', '$curcontactnumber', '$curemail', '$peraddhousenum', '$perstreet','$perbarangay', '$percity', '$perprovince', '$perhomephone', '$percontactnumber', '$peremail', '$wpaddhousenum' , '$wpstreet' , '$wpbarangay' , '$wpcity' , '$wpprovince' , '$wphomephone' , '$wpcontactnumber' , '$wpemail', '$code', '$date');" ); 
 
 
@@ -269,17 +274,23 @@ Timestamp: $ts
 
     $headers2 = "From: MIHMCI-RTPCR \nMIME-Version: 1.0\nContent-Type: text/html; charset=utf-8\n";
          
-mail($to2, $subject2, $message2, $headers2);
-mail($to3, $subject2, $message2, $headers2);
+    mail($to2, $subject2, $message2, $headers2);
+    mail($to3, $subject2, $message2, $headers2);
          
-if (mail($to, $subject, $message, $headers)){
-   echo "<div class='alert alert-primary' align='center'><strong>Success! </strong> An email has been sent to <b>$curemail</b> for verification.<br>E-mail may be delayed up to 1 minute.<br>See you at Metro Iloilo Hospital & Medical Center, Inc.<br><br>Login to your Applicant profile using credentials below:<br>
-    Username: <b>".$lname."</b>
-    <br>Password: <b>".$code."</b></div>";
-}
-else{
-     echo "<div class='alert alert-danger' align='center'><strong>Error! </strong>Failed sending verification email. Please try again.</div>";
-}
+    if (mail($to, $subject, $message, $headers)){
+    echo "<div class='alert alert-primary' align='center'><strong>Success! </strong> An email has been sent to <b>$curemail</b> for verification.<br>E-mail may be delayed up to 1 minute.<br>See you at Metro Iloilo Hospital & Medical Center, Inc.<br><br>Login to your Applicant profile using credentials below:<br>
+        Username: <b>".$lname."</b>
+        <br>Password: <b>".$code."</b></div>";
+    } else {
+        echo "<div class='alert alert-danger' align='center'><strong>Error! </strong>Failed sending verification email. Please try again.</div>";
+    }
+    ###
+        }else{
+            echo "<div class='alert alert-danger' align='center'><strong>Error! </strong>Captcha do not match. Please try again.</div>";
+        }
+        ###       
+      
+            
            
 
   /*}*/
@@ -567,8 +578,11 @@ else{
                                             E-mail (For Result):
                                             <input class="form-control" type="email"   name="wpemail" autocomplete='off'   placeholder=" " value='<?php echo $wpemail; ?>'>
                                     </div>
-                                    
-                               
+                                    <div class="col-lg-3 font-weight-bold">
+                                        <img src="captcha.php" alt="CAPTCHA" class="img-fluid border border-primary form-control">
+                                        Captcha (copy digits from the image)
+                                        <input type="text" size="6" maxlength="5" name="captcha" value="" class="form-control" required>
+                                    </div>            
                                     <div class="col-md-12 col-lg-12 mb-3">
                                         <div>
                                              <input type='submit' name="submit" class="btn btn-primary btn-block" value="SUBMIT">
@@ -592,7 +606,6 @@ else{
                                 <div class="row">
                                     <div class="col-md-6 col-lg-4">
                                         <div>
-
                                             <input class="form-control" type="text" name='name' placeholder="First/Last Name" autocomplete="off">
                                         </div>
                                     </div>
