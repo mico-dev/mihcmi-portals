@@ -237,7 +237,7 @@ $msg=$img."<br>Dear ".$greet." ".$lname.",
     <a href='https://mihmci-portals.com/login.php?code=".$code."'>Confirm Schedule</a><br><br>
     Login to your Applicant profile using credentials below:<br>
     Username: <b>".$lname."</b>
-    <br>Password: <b>".$code."</b>\
+    <br>Password: <b>".$code."</b>
     
     <br><br><a href='https://mihmci-portals.com/login.php?code=".$code."'>Confirm Schedule and Login to your Applicant Profile</a><br><br><br>
     Please download and fill-up these forms to be submitted upon arrival:<br>
