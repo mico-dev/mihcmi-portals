@@ -221,7 +221,7 @@ include('rtpcr.nav.php');
 												}
 											}		
 								
-									$fullname = ucwords(strtolower($rt_lname)).' '.ucwords(strtolower($rt_suffix)).', '.ucwords(strtolower($rt_fname)).' '.ucwords(strtolower($rt_mname));
+										$fullname = ucwords(strtolower(str_replace("Ã‘", "ñ", $rt_lname))).' '.ucwords(strtolower($rt_suffix)).', '.ucwords(strtolower($rt_fname)).' '.ucwords(strtolower(str_replace("Ã‘", "ñ", $rt_mname)));
 									echo '<tr>';
 									echo '<td>'.$rt_id.'</td>';
 									echo '<td>'.$fullname.'</td>';

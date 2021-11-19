@@ -11,9 +11,11 @@ if((isset($_SERVER['HTTP_HOST'])) AND $_SERVER['HTTP_HOST'] == 'localhost' OR $_
 	$database  = 'db_md';
 }
 	$con = new mysqli($host, $user, $password, $database) or die(mysqli_connect_error());
-	$set = $con->query("SET NAMES utf8");	 
+	#$set = $con->query("SET NAMES utf8");
+	$con->set_charset("utf8");
+
 	if ($con -> connect_errno) {
-	echo "Failed to connect to MySQL: " . $con -> connect_error;
+		echo "Failed to connect to MySQL: " . $con -> connect_error;
 	exit();
 }
 ?>
